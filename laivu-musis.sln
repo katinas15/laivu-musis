@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2026
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "laivu musis", "laivu musis.vcxproj", "{FF86B8F9-78B7-4BF9-9A75-6523E3D59E53}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FF86B8F9-78B7-4BF9-9A75-6523E3D59E53}.Debug|x64.ActiveCfg = Debug|x64
+		{FF86B8F9-78B7-4BF9-9A75-6523E3D59E53}.Debug|x64.Build.0 = Debug|x64
+		{FF86B8F9-78B7-4BF9-9A75-6523E3D59E53}.Debug|x86.ActiveCfg = Debug|Win32
+		{FF86B8F9-78B7-4BF9-9A75-6523E3D59E53}.Debug|x86.Build.0 = Debug|Win32
+		{FF86B8F9-78B7-4BF9-9A75-6523E3D59E53}.Release|x64.ActiveCfg = Release|x64
+		{FF86B8F9-78B7-4BF9-9A75-6523E3D59E53}.Release|x64.Build.0 = Release|x64
+		{FF86B8F9-78B7-4BF9-9A75-6523E3D59E53}.Release|x86.ActiveCfg = Release|Win32
+		{FF86B8F9-78B7-4BF9-9A75-6523E3D59E53}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4C105A9-1A50-4F11-89D9-5312CE4D53F7}
+	EndGlobalSection
+EndGlobal
