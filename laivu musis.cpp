@@ -6,6 +6,7 @@
 #include <time.h>
 #include <string>
 #include <type_traits>
+#include <windows.h>
 
 using namespace std;
 
@@ -13,13 +14,16 @@ const char LANG_TUSC = ' ';
 const char LANG_LAIV = 'O';
 const char LANG_SAUTA = '.';
 const char LANG_PTKT = 'X';
+
+
+
 class Claukas
 {
 private:
 	char zaidimoLaukas[10][10];
 	char fl[10][10];
 public:
-	string message;
+	string message = " ";
 	char get_status(int x, int y)
 	{
 		return fl[x][y];
@@ -143,8 +147,8 @@ public:
 
 
 	void message_show() {
-		if (message != "") cout << message << endl;
-		message = "";
+		if (message != " ") cout << message << endl;
+		message = " ";
 	}
 
 };
@@ -164,7 +168,7 @@ private:
 public:
 	int playerLaivuSk = 20;
 	char get_status(int x, int y)
-	{
+	{ 
 		return playerField[x][y];
 	};
 	void show_field()
@@ -182,27 +186,19 @@ public:
 	};
 	void clear_field()
 	{
-		for (int y = 0; y < 10; y++)
+		for (int y = 0; y < 10; y++) {
 			for (int x = 0; x < 10; x++) {
 				playerField[x][y] = LANG_TUSC;
 			}
+		}
 	};
-
-
-	/*
-	00000
-	00X00
-	00X00
-	00X00
-	00.00
-	*/
 	void destroyed(int x, int y) {//pazymi aplinkinius langelius
 		if (vertikalus) {
 			int k = 0; //einame zemyn
 			while (playerField[x][y + k] == LANG_PTKT) {
 				for (int i = -1; i <= 1; i++) {
 					for (int j = -1; j <= 1; j++) {
-						if (playerField[x + i][y + j + k] != LANG_PTKT && (x + i) <= 9 && (y + j + k) <= 9 && (x + i) >= 0 && (y + j + k) >= 0) playerField[x + i][y + j + k] = LANG_SAUTA;
+						if (playerField[x + i][y + j + k] != LANG_PTKT && playerField[x + i][y + j + k] != LANG_LAIV && (x + i) <= 9 && (y + j + k) <= 9 && (x + i) >= 0 && (y + j + k) >= 0) playerField[x + i][y + j + k] = LANG_SAUTA;
 					}
 				}
 				k++;
@@ -212,7 +208,7 @@ public:
 			while (playerField[x][y - k] == LANG_PTKT) {
 				for (int i = -1; i <= 1; i++) {
 					for (int j = -1; j <= 1; j++) {
-						if (playerField[x + i][y + j - k] != LANG_PTKT && (x + i) <= 9 && (y + j - k) <= 9 && (x + i) >= 0 && (y + j - k) >= 0) playerField[x + i][y + j - k] = LANG_SAUTA;
+						if (playerField[x + i][y + j - k] != LANG_PTKT && playerField[x + i][y + j + k] != LANG_LAIV && (x + i) <= 9 && (y + j - k) <= 9 && (x + i) >= 0 && (y + j - k) >= 0) playerField[x + i][y + j - k] = LANG_SAUTA;
 					}
 				}
 				k++;
@@ -224,7 +220,7 @@ public:
 			while (playerField[x - k][y] == LANG_PTKT) {
 				for (int i = -1; i <= 1; i++) {
 					for (int j = -1; j <= 1; j++) {
-						if (playerField[x + i - k][y + j] != LANG_PTKT && (x + i - k) <= 9 && (y + j) <= 9 && (x + i - k) >= 0 && (y + j + k) >= 0) playerField[x + i - k][y + j] = LANG_SAUTA;
+						if (playerField[x + i - k][y + j] != LANG_PTKT && playerField[x + i][y + j + k] != LANG_LAIV && (x + i - k) <= 9 && (y + j) <= 9 && (x + i - k) >= 0 && (y + j + k) >= 0) playerField[x + i - k][y + j] = LANG_SAUTA;
 					}
 				}
 				k++;
@@ -234,7 +230,7 @@ public:
 			while (playerField[x + k][y] == LANG_PTKT) {
 				for (int i = -1; i <= 1; i++) {
 					for (int j = -1; j <= 1; j++) {
-						if (playerField[x + i + k][y + j] != LANG_PTKT && (x + i + k) <= 9 && (y + j) <= 9 && (x + i + k) >= 0 && (y + j + k) >= 0) playerField[x + i + k][y + j] = LANG_SAUTA;
+						if (playerField[x + i + k][y + j] != LANG_PTKT && playerField[x + i][y + j + k] != LANG_LAIV && (x + i + k) <= 9 && (y + j) <= 9 && (x + i + k) >= 0 && (y + j + k) >= 0) playerField[x + i + k][y + j] = LANG_SAUTA;
 					}
 				}
 				k++;
@@ -246,13 +242,13 @@ public:
 		int counter = 0;
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
-				if (playerField[x + i][y + j] == LANG_PTKT || playerField[x + i][y + j] == LANG_LAIV) counter++;
+				if ((playerField[x + i][y + j] == LANG_PTKT || playerField[x + i][y + j] == LANG_LAIV) && (x+i < 10 && y+j < 10 && x+i >= 0 && y+j >= 0)) counter++;
 			}
 		}
 
 		if (counter == 1) {
 			cout << "vienvietis nusautas" << endl;
-			destroyed(x, y);
+			reset(x, y);
 			return true;
 		}
 		return false;
@@ -347,26 +343,32 @@ public:
 		kitaPuse = false;
 		pKartas = true;
 		for (int i = 0; i < 4; i++) sautaPuse[i] = 0;
+		
 	}
 	void AI_shoot() {
 
 		bool pataike = true;
-
+		if (playerLaivuSk <= 0) pataike = false;
 		while (pataike) {
 			pataike = false;
 			if (pKartas) {
 				x = rand() % 10;
 				y = rand() % 10;
-				while (playerField[x][y] == LANG_SAUTA || playerField[x][y] == LANG_PTKT) {
+				while (playerField[x][y] == LANG_SAUTA || playerField[x][y] == LANG_PTKT || x>9 || x<0 || y>9||y<0) {
+					if (playerLaivuSk <= 0) break;
 					x = rand() % 10;
 					y = rand() % 10;
 				}
 
 				pataike = suvis(x, y);
+				if (playerLaivuSk <= 0) break;
 				pKartas = !pataike;
 				if (pataike) {
-					//playerLaivuSk--;
 					pKartas = ar_vienvietis(x, y);
+					if (playerLaivuSk <= 0) {
+						pataike = false;
+						break;
+					}
 				}
 
 			}
@@ -410,27 +412,14 @@ public:
 				}
 				else {
 				retry:
+					if (playerLaivuSk <= 0) {
+						pataike = false;
+						break;
+					}
 					//ieskoma nesauta puse
-  /*
-  000.0
-  00.X.
-  00000
-  */
 					int random = rand() % 4;    //ieskoma nesauta puse
 					while (sautaPuse[random] != 0) {
 						random = rand() % 4;
-						// int counter = 0;
-						// for(int i=0;i<4;i++){
-						//     if(sautaPuse[i] == 1) counter++;
-						// }
-						//
-						// if(counter == 4){
-						//     for(int i=0;i<4;i++){
-						//         sautaPuse[i] = 0;
-						//     }
-						//     pKartas = true;
-						//     break;
-						// }
 					}
 
 					//saudys i virsu
@@ -442,6 +431,7 @@ public:
 						if (vertikalus) {
 							int i = 2;     //nes antras suvis todel = 2
 							while (suvis(x, y - i) && i < 4) {
+								if (y - i < 0) reset(x, y);
 								i++;
 							}
 
@@ -461,6 +451,7 @@ public:
 						if (vertikalus) {
 							int i = 2;     //nes antras suvis todel = 2
 							while (suvis(x, y + i) && i < 4) {
+								if (y + i > 9) reset(x, y);
 								i++;
 							}
 
@@ -480,6 +471,7 @@ public:
 						if (!vertikalus) {
 							int i = 2;     //nes antras suvis todel = 2
 							while (suvis(x + i, y) && i < 4) {
+								if (x + i > 9) reset(x, y);
 								i++;
 							}
 
@@ -499,6 +491,7 @@ public:
 						if (!vertikalus) {
 							int i = 2;     //nes antras suvis todel = 2
 							while (suvis(x - i, y) && i < 4) {
+								if (x - i > 0) reset(x, y);
 								i++;
 							}
 
@@ -506,24 +499,10 @@ public:
 							if (i == 4) reset(x, y);
 							if (sautaPuse[2] == 1) reset(x, y);
 						}
-
 					}
 				}//else kitaPuse
-
-
-
 			} // else if !pKartas
-
 		}//while
-
-		/*
-		 00000
-		 0KKR0
-		 0XXPR
-		 0KKRR
-		 00000
-		 */
-
 	}//ai shoot
 }; // objektas
 
@@ -534,7 +513,6 @@ void cheatcode(Claukas &mano, int x, int y, int &AILaivuSk) {
 		for (int i = 0; i < 10; i++) {
 			for (int j = 0; j < 10; j++) {
 				mano.cannon_fire(i, j);
-				//cout << mano.get_status(i,j) << endl;
 				if (mano.get_status(i, j) == LANG_LAIV) {
 					AILaivuSk--;
 				}
@@ -552,9 +530,20 @@ void screen(Claukas mano, playerField cat) {
 	cat.show_field();
 	cout << endl << endl;
 	mano.show_field();
-	cout << "pasirinkite koordinates x ir y" << endl;
+	if(cat.playerLaivuSk > 0) cout << "pasirinkite koordinates x ir y" << endl;
 	mano.message_show();
 }
+
+void gameOver(Claukas mano, playerField cat) {
+	screen(mano, cat);
+	cout << "Zaidimas baigesi" << endl;
+	if (cat.playerLaivuSk <= 0) cout << "Defeat" << endl;
+	else cout << "Win" << endl;
+	system("PAUSE");
+	exit(1);
+}
+
+
 
 int main()
 {
@@ -599,44 +588,12 @@ int main()
 
 	}
 
-	screen(mano, cat);
-
-	cout << "Zaidimas baigesi" << endl;
-	if (AILaivuSk <= 0) cout << "Win" << endl;
-	else cout << "Defeat" << endl;
-	system("PAUSE");
+	gameOver(mano,cat);
 	return 0;
 }
 
 /*
- 1. pataiko
- 2. paleisti AI
- 3. patikrinti ar tai buvo 1 langelio laivas ir ar galima sauti salia, jei taip pazymeti aplinkui kad dar karta nesautu, jei ne random sauna
- 4. sauna random kryptimi
- 4.1 jei nepataiko kita ejima bandoma kita kryptis
- 4.2 jei pataiko saudo toliau ta pacia kryptimi kol nepataiko
- 4.2.1 jei tai ne visas laivas gryztama atgal ir saudoma i priesinga puse
- 4.3 kaskart tikrinimas vykdomas ar nenusautas laivas -----------------delete
-
-
-
-
-
-
-
- kad esant random suviui tikrintu ar jau tenais yra sautas langelis
-
- tikrinti ar ai saudo ne out of bounds
-
- zaidimo pabaiga glithinasi
-
- neleisti vel sauti ai kai neteisinga koordinate is player
-
-
-
 sutvarkyti kad neleistu rasyti characteriu
-
-
 
 nenaudoti goto
 
