@@ -121,6 +121,7 @@ public:
 
 	}
 	bool cannon_fire(int x, int y) {
+		message = " ";
 		if (x < 0 || x>9 || y < 0 || y>9) {
 			message = "Netinkama koordinate";
 			return false;
@@ -563,22 +564,19 @@ int main()
 
 		//zaidejas
 		while (pataike) {
-		start:
 			screen(mano, cat);
 			pataike = false;
 			cin >> x >> y;
-
 			cheatcode(mano, x, y, AILaivuSk);
-
 			if (AILaivuSk == 0) break;
-
-			while (!mano.cannon_fire(x, y)) {
-				goto start;
+			if (!mano.cannon_fire(x, y)) {
+				pataike = true; //leidziama sauti dar karta jei neteisingai ivestos kooridantes
 			}
-
-			if (mano.get_status(x, y) == LANG_LAIV) {
-				AILaivuSk--;
-				pataike = true;
+			else {
+				if (mano.get_status(x, y) == LANG_LAIV) {
+					AILaivuSk--;
+					pataike = true;
+				}
 			}
 		}
 
