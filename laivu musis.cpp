@@ -22,17 +22,17 @@ const char LANG_PTKT = 'X';
 class Claukas
 {
 private:
-	char zaidimoLaukas[10][10];
-	char fl[10][10];
+	char zaidimoLaukas[10][10];	// laukas kuris yra isvedamas zaidejui, jame mato kur sove ir kur pataike
+	char fl[10][10];		//laukas kuriame yra surasyti visi prieso laivai
 public:
-	string message = " ";
-	char get_status(int x, int y)
+	string message = " ";	//reikalingas isvesti ar teisingai pasirinko koordinates
+	char get_status(int x, int y)//isveda char pasirinktos pozicijos
 	{
-		return fl[x][y];
+		return fl[x][y];	
 	};
-	void show_field()
+	void show_field()	//isveda zaidimo lauka i kuri zaidejas saudo
 	{	
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);	//reikalinga spalvoms nustatyti
 		cout << "Prieso laukas\n";
 		cout << "  0123456789\n";
 
@@ -40,38 +40,38 @@ public:
 			cout << y << " ";
 			for (int x = 0; x < 10; x++) {
 				
-				if (zaidimoLaukas[x][y] == LANG_PTKT) SetConsoleTextAttribute(hConsole, 196);
+				if (zaidimoLaukas[x][y] == LANG_PTKT) SetConsoleTextAttribute(hConsole, 196); //jei pataikyta isveda raudona spalva
 				cout << zaidimoLaukas[x][y];
-				SetConsoleTextAttribute(hConsole, 15 + 1 * 16);
+				SetConsoleTextAttribute(hConsole, 15 + 1 * 16); //grazinama i melynai balta spalva
 			}
 			cout << endl;
 		}
 
 	};
-	void end_game()
+	void end_game()	//pasibaigus zaidimui parodoma kur buvo visi prieso laivai
 	{
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);//reikalinga spalvoms nustatyti
 		cout << "Prieso laukas\n";
 		cout << "  0123456789\n";
 
 		for (int y = 0; y < 10; y++) {
 			cout << y << " ";
 			for (int x = 0; x < 10; x++) {
-				if(zaidimoLaukas[x][y] == LANG_PTKT) SetConsoleTextAttribute(hConsole, 196);
-				if (zaidimoLaukas[x][y] == LANG_TUSC) {
+				if(zaidimoLaukas[x][y] == LANG_PTKT) SetConsoleTextAttribute(hConsole, 196); //jei pataikyta isveda raudona spalva
+				if (zaidimoLaukas[x][y] == LANG_TUSC) {	//parodomi like laivai
 					if(fl[x][y] == LANG_LAIV) SetConsoleTextAttribute(hConsole, 46);
 
 					cout << fl[x][y];
 					}
 				else cout << zaidimoLaukas[x][y];
 
-				SetConsoleTextAttribute(hConsole, 15 + 1 * 16);
+				SetConsoleTextAttribute(hConsole, 15 + 1 * 16);//grazinama i melynai balta spalva
 			}
 			cout << endl;
 		}
 
 	};
-	void clear_field()
+	void clear_field()	//istrinami visi lauke buve char
 	{
 		for (int y = 0; y < 10; y++)
 			for (int x = 0; x < 10; x++) {
@@ -79,14 +79,14 @@ public:
 				fl[x][y] = LANG_TUSC;
 			}
 	};
-	bool put_ship(int x, int y, int ilg, bool yra_vert)
+	bool put_ship(int x, int y, int ilg, bool yra_vert) //tikrinama ar laivas gali buti padetas
 	{
 		bool pavyko = true;
-		if (x < 0 || x>9 || y < 0 || y>9 || ilg < 1 || ilg>4 || (yra_vert && (ilg + y) > 9) || (!yra_vert && (ilg + x) > 9)) {
+		if (x < 0 || x>9 || y < 0 || y>9 || ilg < 1 || ilg>4 || (yra_vert && (ilg + y) > 9) || (!yra_vert && (ilg + x) > 9)) {	//tiktinama ar parinkta tinkama koordinate
 			return false;
 		}
 		else
-			for (int i = 0; i < ilg && pavyko; i++)
+			for (int i = 0; i < ilg && pavyko; i++)	//tikrinama ar salia nera laivu
 			{
 				if (yra_vert) // Vertikalus
 				{
@@ -131,7 +131,7 @@ public:
 		}
 		return pavyko;
 	}
-	void place_ships()
+	void place_ships()	//bandoma padeti laiva atsitiktinai pasirinktoje pozicijoje
 	{
 		int x, y;
 		bool krypt;
@@ -150,31 +150,31 @@ public:
 
 
 	}
-	bool cannon_fire(int x, int y) {
+	bool cannon_fire(int x, int y) {	//saunama i atitinkama koordinate
 		message = " ";
-		if (x < 0 || x>9 || y < 0 || y>9) {
+		if (x < 0 || x>9 || y < 0 || y>9) {	//jei neiteisingai pasirinkta koordinate
 			message = "Netinkama koordinate";
 			return false;
 		}
 
-		else if (zaidimoLaukas[x][y] != LANG_TUSC) {
+		else if (zaidimoLaukas[x][y] != LANG_TUSC) {	//jei jau i sita langeli buvo sauta
 			message = "Pasirinkite kita langeli";
 			return false;
 		}
 
-		else if (fl[x][y] == LANG_LAIV) {
+		else if (fl[x][y] == LANG_LAIV) {	//jei tai laivas tai pataike
 			zaidimoLaukas[x][y] = LANG_PTKT;
 			return true;
 		}
 
-		else if (fl[x][y] == LANG_TUSC) {
+		else if (fl[x][y] == LANG_TUSC) {	//jei sauta i tuscia langeli
 			zaidimoLaukas[x][y] = LANG_SAUTA;
 			return true;
 		}
 
 		return true;
 	}
-	void message_show() {
+	void message_show() {	//isvedamas cannon_fire nustatytas message ir iskarto istrinamas
 		if (message != " ") cout << message << endl;
 		message = " ";
 	}
@@ -186,26 +186,26 @@ class playerField
 private:
 	int x, y;
 	char playerField[10][10];
-	bool kryptis = false;
-	bool vertikalus = false;
+	bool kryptis = false;		
+	bool vertikalus = false;	
 	bool kitaPuse = false;
 	int sautaPuse[4] = { 0 };
 	bool pKartas = true;
 
 public:
 	int playerLaivuSk = 20;
-	char get_status(int x, int y)
+	char get_status(int x, int y)//isveda char pasirinktos pozicijos
 	{
 		return playerField[x][y];
 	};
-	void show_field()
+	void show_field() //isveda zaidimo lauka i kuri zaidejas saudo
 	{
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-		HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE);
-		COORD coord;
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE); //reikalinga spalvoms nustatyti
+		HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE);	//reikalinga nustatant cout pozicija
+		COORD coord;	//cout pozicijos koordinates
 		coord.X = 15;
 		coord.Y = 0;
-		SetConsoleCursorPosition(hout, coord);
+		SetConsoleCursorPosition(hout, coord);	//nustatoma kursoriaus pozicija
 		cout << "Zaidejo laukas\n";
 		coord.Y = 1;
 		SetConsoleCursorPosition(hout, coord);
@@ -217,7 +217,7 @@ public:
 			SetConsoleCursorPosition(hout, coord);
 			cout << y << " ";
 			for (int x = 0; x < 10; x++) {
-				if (playerField[x][y] == LANG_LAIV) SetConsoleTextAttribute(hConsole, 46);
+				if (playerField[x][y] == LANG_LAIV) SetConsoleTextAttribute(hConsole, 46);	//parenkamos atitinkamos isvedimo spalvos
 				if (playerField[x][y] == LANG_PTKT) SetConsoleTextAttribute(hConsole, 196);
 				cout << playerField[x][y];
 				SetConsoleTextAttribute(hConsole, 15 + 1 * 16);
@@ -226,16 +226,16 @@ public:
 		}
 
 	};
-	void show_start(bool message)
+	void show_start(bool message)	//reikalinga zaidimo pradziai kai zaidejas delioja laivus
 	{
 		
-		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);//reikalinga spalvoms nustatyti
 		SetConsoleTextAttribute(hConsole, 15 + 1 * 16);
-		HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE);
-		COORD coord;
+		HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE);//reikalinga nustatant cout pozicija
+		COORD coord;//cout pozicijos koordinates
 		coord.X = 0;
 		coord.Y = 0;
-		SetConsoleCursorPosition(hout, coord);
+		SetConsoleCursorPosition(hout, coord);//nustatoma kursoriaus pozicija
 		cout << "Zaidejo laukas\n";
 
 		coord.Y = 1;
@@ -254,11 +254,11 @@ public:
 			}
 			cout << endl;
 		}
-		cout << "1-mouse = padeti laiva" << endl;
+		cout << "1-mouse = padeti laiva" << endl;	//deliojimo instrukcijos
 		cout << "2-mouse = pakeisti krypti" << endl;
 		cout << endl << endl;
-		cout << "Jei neveikia pele: 2-mouse ant consoles->Properties->Options->'uncheck' Quick Edit Mode" << endl;
-		if (message) {
+		cout << "Jei neveikia pele: 2-mouse ant consoles->Properties->Options->'uncheck' Quick Edit Mode" << endl;	//kartais neveikia mouse
+		if (message) {//jei buvo pasirinkta netinkama laivo dejimo pozicija
 			SetConsoleTextAttribute(hConsole, 15 + 4*16);
 			coord.X = 15;
 			coord.Y = 5;
@@ -267,7 +267,7 @@ public:
 			SetConsoleTextAttribute(hConsole, 15 + 1 * 16); //set back to black background and white text
 		}
 	};
-	void clearscreen() {
+	void clearscreen() {	//istrinamas ekranas
 		COORD coordScreen = { 0, 0 };
 		DWORD cCharsWritten;
 		CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -282,7 +282,7 @@ public:
 		SetConsoleCursorPosition(hConsole, coordScreen);
 		return;
 	}
-	void clear_field()
+	void clear_field()	//istrinami playerfield esami char
 	{
 		for (int y = 0; y < 10; y++) {
 			for (int x = 0; x < 10; x++) {
@@ -290,7 +290,7 @@ public:
 			}
 		}
 	};
-	void destroyed(int x, int y) {//pazymi aplinkinius langelius
+	void destroyed(int x, int y) {//pazymi aplinkinius langelius jei laivas buvo nusautas tam kad AI nesuadytu aplinkui nusauta laiva kur pagal salyga negali buti laivu
 		if (vertikalus) {
 			int k = 0; //einame zemyn
 			while (playerField[x][y + k] == LANG_PTKT) {
@@ -356,21 +356,21 @@ public:
 		}
 	}
 
-	bool ar_vienvietis(int x, int y) {
+	bool ar_vienvietis(int x, int y) {	//patikrina ar tai vienvietis laivas, jei taip iskart pazymima aplinkui kaip nusautas
 		int counter = 0;
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
-				if ((playerField[x + i][y + j] == LANG_PTKT || playerField[x + i][y + j] == LANG_LAIV) && (x + i < 10 && y + j < 10 && x + i >= 0 && y + j >= 0)) counter++;
+				if ((playerField[x + i][y + j] == LANG_PTKT || playerField[x + i][y + j] == LANG_LAIV) && (x + i < 10 && y + j < 10 && x + i >= 0 && y + j >= 0)) counter++; //ieskoma ar tikrai vienvietis
 			}
 		}
 
 		if (counter == 1) {
-			reset(x, y);
+			destroyed(x, y);	//nutrinami aplinkiniai langeliai
 			return true;
 		}
 		return false;
 	};
-	bool suvis(int x, int y) {
+	bool suvis(int x, int y) {//AI saudo
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE);
 		CONSOLE_CURSOR_INFO     cursorInfo;
@@ -381,7 +381,8 @@ public:
 		SetConsoleCursorInfo(hout, &cursorInfo);
 		SetConsoleCursorPosition(hout, coord);
 		SetConsoleTextAttribute(hConsole, 196);
-		//cout << x << " " << y << endl;
+		if (x > 9 || x < 0 || y>9 || y < 0) return false;
+
 		if (playerField[x][y] == LANG_TUSC) {
 			playerField[x][y] = LANG_SAUTA;
 			cout << LANG_SAUTA;
@@ -397,7 +398,7 @@ public:
 		}
 		return false;
 	}
-	bool put_ship(int x, int y, int ilg, bool yra_vert)
+	bool put_ship(int x, int y, int ilg, bool yra_vert) //tikrina ar gali padeti laiva atitinkamoje pozicijoje
 	{
 		bool pavyko = true;
 		if (x < 0 || x>9 || y < 0 || y>9 || ilg < 1 || ilg>4 || (yra_vert && (ilg + y - 1) > 9) || (!yra_vert && (ilg + x - 1) > 9)) {
@@ -449,7 +450,7 @@ public:
 		}
 		return pavyko;
 	}
-	void place_ships()
+	void place_ships()	//zaidejas peles mygtuko paspaudimu deda laivus savo lauke
 	{
 		HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		HANDLE hout = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -461,7 +462,7 @@ public:
 		SetConsoleCursorInfo(hout, &cursorInfo);
 		SetConsoleCursorPosition(hout, coord);
 
-		HANDLE hin = GetStdHandle(STD_INPUT_HANDLE);
+		HANDLE hin = GetStdHandle(STD_INPUT_HANDLE);	//mouse input
 		INPUT_RECORD InputRecord;
 		DWORD Events;
 		CONSOLE_CURSOR_INFO cci;
@@ -479,11 +480,12 @@ public:
 				message = false;
 				bool input = true;
 				bool krypt = false;
-				while (input) {
+				while (input) {	//tol kol nepaspaustas 1-mouse
 					
 					ReadConsoleInput(hin, &InputRecord, 1, &Events);
 					switch (InputRecord.EventType) {
 					case MOUSE_EVENT: // mouse input 
+						
 						clearscreen();
 						show_start(message);
 						x = InputRecord.Event.MouseEvent.dwMousePosition.X - 2;
@@ -493,7 +495,7 @@ public:
 						cursorInfo.bVisible = true; // set the cursor visibility
 						SetConsoleCursorPosition(hout, coord);
 						SetConsoleTextAttribute(hConsole, 46);
-						if (!krypt) {
+						if (!krypt) {						//kiekviena karta kai yra pajudinama pelyte, parodomas laivas kuri gali padeti zaidejas toje pozicijoje
 							for (int i = 0; i < ilg; i++) {
 								cout << LANG_LAIV;
 							}
@@ -507,16 +509,15 @@ public:
 						}
 						SetConsoleTextAttribute(hConsole, 15);
 
-						if (GetKeyState(VK_LBUTTON) < 0)
+						if (GetKeyState(VK_LBUTTON) < 0)	//jei 1-mouse mygtukas laivas pastatomas
 						{
-							
 							if (!put_ship(x, y, ilg, krypt)) {
 								message = true;
 							} else input = false;
 							
 						}
 
-						else if (GetKeyState(VK_RBUTTON) < 0)
+						else if (GetKeyState(VK_RBUTTON) < 0)	//jei 2-mouse pakeiciama kryptis laivo
 						{
 							if (krypt) krypt = false;
 							else krypt = true;
@@ -530,21 +531,22 @@ public:
 
 
 	}
-	void reset(int x, int y) {
+	void reset(int x, int y) {	//resetinamas AI saudymas, kad vel saudytu random
 		destroyed(x, y);
 		vertikalus = false;
 		kitaPuse = false;
 		pKartas = true;
 		for (int i = 0; i < 4; i++) sautaPuse[i] = 0;
+		AI_shoot();
 
 	};
 	void AI_shoot() {
 
 		bool pataike = true;
 		if (playerLaivuSk <= 0) pataike = false;
-		while (pataike) {
+		while (pataike) {	
 			pataike = false;
-			if (pKartas) {
+			if (pKartas) {	//jei tai pirmas suvis AI sauna random
 				x = rand() % 10;
 				y = rand() % 10;
 				while (playerField[x][y] == LANG_SAUTA || playerField[x][y] == LANG_PTKT || x>9 || x<0 || y>9 || y<0) {
@@ -562,23 +564,29 @@ public:
 						pataike = false;
 						break;
 					}
+
+					
 				}
 
 			}
-			else if (!pKartas) {
+			else if (!pKartas) {	//jei tai yra antras suvis jau saudoma pagal tam tikra logika
 
-				if (kitaPuse) {
+				if (kitaPuse) {	 // jei buvo saudoma i viena puse ir nera aisku ar laivas buvo nusautas, saudoma i priesinga puse negu pries tai
 					if (vertikalus) {
 						if (playerField[x][y + 1] == LANG_PTKT && y + 1 <= 9) {
 							int i = 1;     // pradeda sauti vienu i apacia
 							while (suvis(x, y - i)) {
+								
 								i++;
+								if (y - i < 0) break;//kad nesaudytu uz ribu
 							}
 						}
 						else if (y - 1 >= 0) {    //einame zemyn
 							int i = 1;
 							while (suvis(x, y + i)) {
+								
 								i++;
+								if (y + i > 0) break;//kad nesaudytu uz ribu
 							}
 						}
 						//horizontaliai
@@ -587,13 +595,17 @@ public:
 						if (playerField[x + 1][y] == LANG_PTKT && x + 1 <= 9) {
 							int i = 1;     // einame i kaire
 							while (suvis(x - i, y)) {
+								
 								i++;
+								if (x - i < 0) break;//kad nesaudytu uz ribu
 							}
 						}
 						else if (x + 1 <= 9) { // einame i desine
 							int i = 1;
 							while (suvis(x + i, y)) {
+								
 								i++;
+								if (x + i > 9) break;//kad nesaudytu uz ribu
 							}
 						}
 
@@ -605,14 +617,15 @@ public:
 				}
 				else {
 					bool retry = true;
-					while (retry) {
+
+					while (retry) {	
 						retry = false;
 						if (playerLaivuSk <= 0) {
 							pataike = false;
 							break;
 						}
-						//ieskoma nesauta puse
-						int random = rand() % 4;    //ieskoma nesauta puse
+						//jei buvo pataikyta, atsitiktinai parenkama i kuria puse toliau saudyti
+						int random = rand() % 4;    //ieskoma nesauta puse 
 						while (sautaPuse[random] != 0) {
 							random = rand() % 4;
 						}
@@ -620,22 +633,45 @@ public:
 						//saudys i virsu
 						if (random == 0) {
 							sautaPuse[0] = 1;
-							if (playerField[x][y - 1] == LANG_SAUTA || y - 1 < 0)  retry = true;
+							if (playerField[x][y - 1] == LANG_SAUTA || y - 1 < 0)  retry = true;	//jei pasirinktoje puseje jau langelis sautas arba iseina uz ribu
 							else {
 								vertikalus = suvis(x, y - 1);
 
 								if (vertikalus) {
-									int i = 2;     //nes antras suvis todel = 2
-									while (suvis(x, y - i) && i < 4) {
-										if (y - i < 0) reset(x, y);
-										i++;
+									
+									int i = 2;     //nes trecias suvis todel = 2
+									if (y - i < 0) {
+										kitaPuse = true;
+								
+										//kad nesaudytu uz ribu
+									}
+									else {
+
+										while (suvis(x, y - i) && i <= 4) {
+											
+											i++;
+											if (y - i < 0) kitaPuse = true;//kad nesaudytu uz ribu
+										}
+
 									}
 
-									if (i < 4)   kitaPuse = true;
-									if (playerField[x][y + 1] == LANG_SAUTA) reset(x, y); //jei priesingoje puseje jau sauta 
-									if (i == 4) reset(x, y);
-									if (sautaPuse[1] == 1) reset(x, y); //jau buvo sauta i priesinga puse grizti nereikia
-									if (y == 9) reset(x, y); //jei yra pacioje apacioje zemyn nereikia saudyti 
+
+									if (kitaPuse) {	//jei pasiekiama lauko riba saudoma i kita puse
+										i = 1;
+										while (suvis(x, y + i) && i <= 4) {
+											i++;
+										}
+									}
+
+									if (y + 1 > 9) reset(x, y); // jei pabaiga
+									else if (playerField[x][y + 1] == LANG_SAUTA || y + 1 > 9) reset(x, y); //jei priesingoje puseje jau sauta 
+									else if (i == 4) reset(x, y);	//jei tai yra keturvietis laivas, jis sunaikinamas ir aplinkui pazymima
+									else if (sautaPuse[1] == 1) reset(x, y); //jau buvo sauta i priesinga puse grizti nereikia
+									else if (y == 9) reset(x, y); //jei yra pacioje apacioje zemyn nereikia saudyti 
+									else if (kitaPuse) reset(x, y);
+									else if (i < 4)   kitaPuse = true;	//jei neaisku ar buvo pilnai nusautas laivas todel bandoma sauti i priesinga puse
+
+
 								}
 
 
@@ -645,21 +681,40 @@ public:
 						//saudys i apacia
 						if (random == 1) {
 							sautaPuse[1] = 1;
-							if (playerField[x][y + 1] == LANG_SAUTA || y + 1 > 9)  retry = true;
+							if (playerField[x][y + 1] == LANG_SAUTA || y + 1 > 9)  retry = true;//jei pasirinktoje puseje jau langelis sautas arba iseina uz ribu
 							else {
 								vertikalus = suvis(x, y + 1);
 
 								if (vertikalus) {
-									int i = 2;     //nes antras suvis todel = 2
-									while (suvis(x, y + i) && i < 4) {
-										if (y + i > 9) reset(x, y);
-										i++;
+									int i = 2;     //nes trecias suvis todel = 2
+									if (y + i > 9) {
+										kitaPuse = true;
+											//kad nesaudytu uz ribu
 									}
-									if (playerField[x][y - 1] == LANG_SAUTA) reset(x, y); //jei priesingoje puseje jau sauta 
-									if (i < 4)   kitaPuse = true;
-									if (i == 4) reset(x, y);
-									if (sautaPuse[0] == 1) reset(x, y);
-									if (y == 0) reset(x, y); //jei yra pacioje virsuje i virsu nereikia saudyti 
+									else {
+
+										while (suvis(x, y + i) && i <= 4) {
+											
+											i++;
+											if (y + i > 9) break;//kad nesaudytu uz ribu
+										}
+									}
+
+									if (kitaPuse) {//jei pasiekiama lauko riba saudoma i kita puse
+										i = 1;
+										while (suvis(x, y - i) && i <= 4) {
+											i++;
+										}
+									}
+
+									if (y - 1 < 0) reset(x, y); // jei pabaiga
+									else if (playerField[x][y - 1] == LANG_SAUTA)  reset(x, y); //jei priesingoje puseje jau sauta arba kitoje puseje pabaiga
+									else if (kitaPuse) reset(x, y);
+									else if (i < 4)   kitaPuse = true;//jei neaisku ar buvo pilnai nusautas laivas todel bandoma sauti i priesinga puse
+									else if (i == 4) reset(x, y);//jei tai yra keturvietis laivas, jis sunaikinamas ir aplinkui pazymima
+									else if (sautaPuse[0] == 1) reset(x, y); //jau buvo sauta i priesinga puse grizti nereikia
+									else if (y == 0) reset(x, y); //jei yra pacioje virsuje i virsu nereikia saudyti 
+			
 								}
 							}
 
@@ -668,22 +723,44 @@ public:
 						// saudys i desine
 						if (random == 2) {
 							sautaPuse[2] = 1;
-							if (playerField[x + 1][y] == LANG_SAUTA || x + 1 > 9)  retry = true;
+							if (playerField[x + 1][y] == LANG_SAUTA || x + 1 > 9) {
+								retry = true;//jei pasirinktoje puseje jau langelis sautas arba iseina uz ribu
+							}
 							else {
 								vertikalus = !(suvis(x + 1, y));
 
 								if (!vertikalus) {
-									int i = 2;     //nes antras suvis todel = 2
-									while (suvis(x + i, y) && i < 4) {
-										if (x + i > 9) reset(x, y);
-										i++;
+									int i = 2;     //nes trecias suvis todel = 2
+									if (x + i > 9) {
+										kitaPuse = true;
+										//kad nesaudytu uz ribu
 									}
-									if (playerField[x-1][y] == LANG_SAUTA) reset(x, y); //jei priesingoje puseje jau sauta 
+									else {
 
-									if (i < 4)   kitaPuse = true;
-									if (i == 4) reset(x, y);
-									if (sautaPuse[3] == 1) reset(x, y);
-									if (x == 0) reset(x, y); //jei yra kaireje
+										while (suvis(x + i, y) && i <= 4) {
+											
+											i++;
+											if (x + i > 9) break;//kad nesaudytu uz ribu
+										}
+
+									}
+
+									if (kitaPuse) {//jei pasiekiama lauko riba saudoma i kita puse
+										i = 1;
+										while (suvis(x - i, y) && i <= 4) {
+											i++;
+										}
+									}
+
+
+									if (x + 1 > 9) reset(x, y); // jei pabaiga
+									else if (playerField[x - 1][y] == LANG_SAUTA || x - 1 < 0) reset(x, y); //jei priesingoje puseje jau sauta 
+									else if (kitaPuse) reset(x, y);
+									else if (i < 4)   kitaPuse = true;   //jei neaisku ar buvo pilnai nusautas laivas todel bandoma sauti i priesinga puse
+									else if (i == 4) reset(x, y);   //jau buvo sauta i priesinga puse grizti nereikia
+									else if (sautaPuse[3] == 1) reset(x, y); //jau buvo sauta i priesinga puse grizti nereikia
+									else if (x == 0) reset(x, y); //jei yra kaireje
+							
 								}
 							}
 
@@ -692,22 +769,42 @@ public:
 						// saudys i kaire
 						if (random == 3) {
 							sautaPuse[3] = 1;
-							if (playerField[x - 1][y] == LANG_SAUTA || x - 1 < 0)  retry = true;
+							if (playerField[x - 1][y] == LANG_SAUTA || x - 1 < 0)  retry = true;//jei pasirinktoje puseje jau langelis sautas arba iseina uz ribu
 							else {
 								vertikalus = !(suvis(x - 1, y));
 
 								if (!vertikalus) {
-									int i = 2;     //nes antras suvis todel = 2
-									while (suvis(x - i, y) && i < 4) {
-										if (x - i > 0) reset(x, y);
-										i++;
+									int i = 2;     //nes trecias suvis todel = 2
+									if (x - i < 0) {
+										kitaPuse = true;
+					
+										//kad nesaudytu uz ribu
 									}
-									if (playerField[x+1][y] == LANG_SAUTA) reset(x, y); //jei priesingoje puseje jau sauta 
+									else {
 
-									if (i < 4)   kitaPuse = true;
-									if (i == 4) reset(x, y);
-									if (sautaPuse[2] == 1) reset(x, y);
-									if (x == 9) reset(x, y); //jei yra pacioje desineje
+										while (suvis(x - i, y) && i <= 4) {
+											
+											i++;
+											if (x - i < 0) break; //kad nesaudytu uz ribu
+										}
+
+									}
+
+									if (kitaPuse) {//jei pasiekiama lauko riba saudoma i kita puse
+										i = 1;
+										while (suvis(x + i, y) && i <= 4) {
+											i++;
+										}
+									}
+
+									if (x - 1 < 0) reset(x, y); // jei pabaiga
+									else if (playerField[x + 1][y] == LANG_SAUTA || x + 1 > 9) reset(x, y); //jei priesingoje puseje jau sauta 
+									else if (kitaPuse) reset(x, y);
+									else if (i < 4)   kitaPuse = true; //jei neaisku ar buvo pilnai nusautas laivas todel bandoma sauti i priesinga puse
+									else if (i == 4) reset(x, y);//jau buvo sauta i priesinga puse grizti nereikia
+									else if (sautaPuse[2] == 1) reset(x, y);//jau buvo sauta i priesinga puse grizti nereikia
+									else if (x == 9) reset(x, y); //jei yra pacioje desineje
+							
 								}
 							}
 						}
@@ -719,24 +816,7 @@ public:
 	}//ai shoot
 }; // objektas
 
-void cheatcode(Claukas &mano, int x, int y, int &AILaivuSk) {
-
-	//cheat code nuke
-	if (x == 1337 && y == 1488) {
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
-				mano.cannon_fire(i, j);
-				if (mano.get_status(i, j) == LANG_LAIV) {
-					AILaivuSk--;
-				}
-			}
-		}
-	}
-
-
-}
-
-void clearscreen() {
+void clearscreen() {	
 	COORD coordScreen = { 0, 0 };
 	DWORD cCharsWritten;
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
@@ -777,8 +857,6 @@ void gameOver(Claukas mano, playerField cat) {
 
 int main()
 {
-	
-
 	HWND console = GetConsoleWindow();
 	RECT r;
 	GetWindowRect(console, &r); //stores the console's current dimensions
@@ -827,50 +905,25 @@ int main()
 			pataike = false;
 			bool input = true;
 			while(input){
-
+				if (AILaivuSk <= 0) gameOver(mano, cat);
 				ReadConsoleInput(hin, &InputRecord, 1, &Events);
 				switch (InputRecord.EventType) {
 				case MOUSE_EVENT: // mouse input 
 
-					if (InputRecord.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)
+					if (InputRecord.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)	//jei paspaustas 1-mouse sauna i ta koordinate
 					{
-						//cout << InputRecord.Event.MouseEvent.dwMousePosition.X << " " << InputRecord.Event.MouseEvent.dwMousePosition.Y << endl;
 						x = InputRecord.Event.MouseEvent.dwMousePosition.X - 2;
 						y = InputRecord.Event.MouseEvent.dwMousePosition.Y - 2;
 						input = false;
 					}
 					break;
 
-				/*case KEY_EVENT:
-					switch (InputRecord.Event.KeyEvent.wVirtualKeyCode)
-					{
-						case VK_RETURN:
-						cin >> x >> y;
-						input = false;
-						break;
-					}
-					break;*/
-					
-
-
-				case WINDOW_BUFFER_SIZE_EVENT: // scrn buf. resizing 
-					;
-					break;
-
-				case FOCUS_EVENT:  // disregard focus events 
-
-				case MENU_EVENT:   // disregard menu events 
-
-					break;
-
-
 				}
 			}
 
 			FlushConsoleInputBuffer(hin);
 
-			cheatcode(mano, x, y, AILaivuSk);
-			if (AILaivuSk == 0) break;
+			if (AILaivuSk <= 0) gameOver(mano, cat);
 			if (!mano.cannon_fire(x, y)) {
 				pataike = true; //leidziama sauti dar karta jei neteisingai ivestos kooridantes
 			}
@@ -883,7 +936,7 @@ int main()
 		}
 
 		screen(mano, cat);
-		//AI
+		//AI saudymas
 		if (AILaivuSk > 0) cat.AI_shoot();
 
 
@@ -893,8 +946,3 @@ int main()
 	return 0;
 }
 
-/*
-kartais freezina
-
-Flickering
-*/
