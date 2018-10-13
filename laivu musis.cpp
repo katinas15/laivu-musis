@@ -640,10 +640,10 @@ public:
 								if (vertikalus) {
 									
 									int i = 2;     //nes trecias suvis todel = 2
-									if (y - i < 0) {
+									if (y - i < 0 || playerField[x][y - i] == LANG_SAUTA) {
 										kitaPuse = true;
 								
-										//kad nesaudytu uz ribu
+										//kad nesaudytu uz ribu arba  i tuscia langelis
 									}
 									else {
 
@@ -656,7 +656,7 @@ public:
 									}
 
 
-									if (kitaPuse) {	//jei pasiekiama lauko riba saudoma i kita puse
+									if (kitaPuse) {	//jei pasiekiama lauko riba arba tuscias langelis saudoma i kita puse
 										i = 1;
 										while (suvis(x, y + i) && i <= 4) {
 											i++;
@@ -687,9 +687,9 @@ public:
 
 								if (vertikalus) {
 									int i = 2;     //nes trecias suvis todel = 2
-									if (y + i > 9) {
+									if (y + i > 9 || playerField[x][y + i] == LANG_SAUTA ) {
 										kitaPuse = true;
-											//kad nesaudytu uz ribu
+										//kad nesaudytu uz ribu arba  i tuscia langelis
 									}
 									else {
 
@@ -700,7 +700,7 @@ public:
 										}
 									}
 
-									if (kitaPuse) {//jei pasiekiama lauko riba saudoma i kita puse
+									if (kitaPuse) {//jei pasiekiama lauko riba arba tuscias langelis saudoma i kita puse
 										i = 1;
 										while (suvis(x, y - i) && i <= 4) {
 											i++;
@@ -731,9 +731,9 @@ public:
 
 								if (!vertikalus) {
 									int i = 2;     //nes trecias suvis todel = 2
-									if (x + i > 9) {
+									if (x + i > 9 || playerField[x+i][y] == LANG_SAUTA) {
 										kitaPuse = true;
-										//kad nesaudytu uz ribu
+										//kad nesaudytu uz ribu arba  i tuscia langelis
 									}
 									else {
 
@@ -745,7 +745,7 @@ public:
 
 									}
 
-									if (kitaPuse) {//jei pasiekiama lauko riba saudoma i kita puse
+									if (kitaPuse) {//jei pasiekiama lauko riba arba tuscias langelis saudoma i kita puse
 										i = 1;
 										while (suvis(x - i, y) && i <= 4) {
 											i++;
@@ -775,10 +775,10 @@ public:
 
 								if (!vertikalus) {
 									int i = 2;     //nes trecias suvis todel = 2
-									if (x - i < 0) {
+									if (x - i < 0 || playerField[x - i][y] == LANG_SAUTA) {
 										kitaPuse = true;
 					
-										//kad nesaudytu uz ribu
+										//kad nesaudytu uz ribu arba  i tuscia langelis
 									}
 									else {
 
@@ -790,7 +790,7 @@ public:
 
 									}
 
-									if (kitaPuse) {//jei pasiekiama lauko riba saudoma i kita puse
+									if (kitaPuse) {//jei pasiekiama lauko riba arba tuscias langelis saudoma i kita puse
 										i = 1;
 										while (suvis(x + i, y) && i <= 4) {
 											i++;
