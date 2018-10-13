@@ -648,7 +648,11 @@ public:
 									else {
 
 										while (suvis(x, y - i) && i <= 4) {
-											
+											if (playerField[x][y - i] == LANG_SAUTA)
+											{
+												kitaPuse = true;
+												break;
+											}
 											i++;
 											if (y - i < 0) kitaPuse = true;//kad nesaudytu uz ribu
 										}
@@ -694,7 +698,11 @@ public:
 									else {
 
 										while (suvis(x, y + i) && i <= 4) {
-											
+											if (playerField[x][y+i] == LANG_SAUTA)
+											{
+												kitaPuse = true;
+												break;
+											}
 											i++;
 											if (y + i > 9) break;//kad nesaudytu uz ribu
 										}
@@ -738,7 +746,11 @@ public:
 									else {
 
 										while (suvis(x + i, y) && i <= 4) {
-											
+											if (playerField[x + i][y] == LANG_SAUTA)
+											{
+												kitaPuse = true;
+												break;
+											}
 											i++;
 											if (x + i > 9) break;//kad nesaudytu uz ribu
 										}
@@ -783,7 +795,11 @@ public:
 									else {
 
 										while (suvis(x - i, y) && i <= 4) {
-											
+											if (playerField[x - i][y] == LANG_SAUTA)
+											{
+												kitaPuse = true;
+												break;
+											}
 											i++;
 											if (x - i < 0) break; //kad nesaudytu uz ribu
 										}
